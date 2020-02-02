@@ -21,11 +21,11 @@ back-end folder is the Spring boot
 ## Preview:
 
 
-![preview](screnClikDoc.PNG)
-![preview](screnclick.PNG)
-![preview](clickdoc4.PNG)
-![preview](clickdoc3.PNG)
-![preview](clickdoc1.PNG)
+![preview](preview.PNG)
+![preview](preview1.PNG)
+![preview](preview2.PNG)
+![preview](preview3.PNG)
+![preview](preview4.PNG)
 ## API
 
 API documentation is in `http://localhost:8015/swagger-ui.html`
