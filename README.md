@@ -39,4 +39,4 @@ API documentation is in `http://localhost:8015/swagger-ui.html`
 ## Licence & Copyright
 © Othmane Sarhabil, Chaimaa  Nazih, Chaimaa  Bellemallem.
 
-Licensed under the [MIT Licence](LICENSE)
+Licensed under the [MIT Licence](https://github.com/SARHABILothmane/ClickDoc-/blob/master/LICENSE.md)
