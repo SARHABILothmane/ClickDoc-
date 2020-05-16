@@ -57,6 +57,7 @@ export default class SignUp extends Component {
 
 
     }
+    
 
     handleChange = (e) =>{
         this.setState({[e.target.name]: e.target.value})
@@ -102,7 +103,7 @@ render(){
                                 required
                                 fullWidth
                                 id="firstName"
-                                label="prenom"
+                                label="nom"
                                 autoFocus
                                 InputProps={{
                                     startAdornment: (
@@ -121,7 +122,7 @@ render(){
                                 required
                                 fullWidth
                                 id="lastName"
-                                label="nom"
+                                label="prenom"
                                 name="lastName"
                                 autoComplete="lname"
                                 InputProps={{

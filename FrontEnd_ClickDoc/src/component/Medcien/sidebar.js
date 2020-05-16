@@ -15,6 +15,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { Redirect } from "react-router-dom";
+import Cookies from 'js-cookie'
 
 import { Link } from "react-router-dom";
 
@@ -85,6 +87,7 @@ export default function MiniDrawer(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [disConected, setdisConected] = React.useState(false)
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -93,7 +96,15 @@ export default function MiniDrawer(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    const disconnected = (e) => {
+        e.preventDefault();
+        Cookies.remove('userAuth');
+        setdisConected(true)
+    }
 
+    if (disConected) {
+        return <Redirect to="/public" />
+    }
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -116,9 +127,13 @@ export default function MiniDrawer(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h5" noWrap>
                         Médcein
           </Typography>
+                    <Typography
+                        variant="h6" noWrap className="mr-auto" style={{ marginLeft: '60rem' }} href="/#">
+                        <Link onClick={disconnected} color="#fff" >Déconnexion</Link>
+                    </Typography>
                 </Toolbar>
             </AppBar>
             <Drawer

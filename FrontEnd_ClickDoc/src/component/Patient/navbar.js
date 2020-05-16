@@ -1,36 +1,32 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Link } from "react-router-dom";
+import {  Redirect } from "react-router-dom";
 // import logo from '../assets/img/logo.svg'; // with import
-
+import Cookies from 'js-cookie'
 import logo from '../../assets/img/logo.svg'; // with import
 
 import { Navbar, Nav } from 'react-bootstrap'
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
 
 export default function NavbarPAtient(props) {
-    const classes = useStyles();
+    const [disConected, setdisConected] = useState(false)
+    const disconnected = (e) => {
+        e.preventDefault();
+        Cookies.remove('userAuth');
+        setdisConected(true)        
+    }
+    if(disConected){
+        return <Redirect to="/public" />
+    }
     return (
-        <div className={classes.root}>
+        <div >
             <AppBar position="fixed" style={{ background: '#6ab2d8' }}>
                 <Toolbar className="d-flex justify-content-between">
                  
                     <Typography variant="h6" className="">
-                        mr. 
+                        Mr/Mme. 
                         {props.donneUser.nom}
           </Typography>
                     <img src={logo}
@@ -44,18 +40,11 @@ export default function NavbarPAtient(props) {
                         <Navbar.Collapse id="basic-navbar-nav">
                            
                             <Nav className="mr-auto ">
-                                <ul className="list-unstyled d-flex navtop">
-                                    <li>
-                                        <Link to="/patient" >Accueil</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/patient/medecin">Recherche</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/patient/rendez-vous">rendez-vous</Link>
-                                    </li>
-                                </ul>
-
+                                <Nav.Link href="/patient">Accueil</Nav.Link>
+                                <Nav.Link href="/patient/medecin">Recherche</Nav.Link>
+                                <Nav.Link href="/patient/rendez-vous">Rendez-vous</Nav.Link>
+                                <Nav.Link onClick={disconnected}>Déconnexion</Nav.Link>
+                                
                             </Nav>
 
                         </Navbar.Collapse>

@@ -20,7 +20,7 @@ import {Modal, Button, Col, Row} from 'react-bootstrap'
 
 import axios from 'axios'
 import { Container, TextField } from '@material-ui/core';
-
+import Cookie from 'js-cookie'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const outerTheme = createMuiTheme({
@@ -37,30 +37,28 @@ export default class listSpicialite extends Component {
 
             showDelete:false,
             showAdd:false,
-            config : {
-                headers: {
-                    'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU4MDI0NjUyNSwiaWF0IjoxNTgwMjI4NTI1fQ.yDzdE681yPwagDGfmVhk_IG3HOoYQABXjJc3l5sjT1t3prmiFAfgCj5kHMEl0mbdiveEiy8r5A8oxYNpLZYeBg'
-                }
-            }
+            
+            
 
         }
     }
-    getListeSpecialite = (token) =>{
+ 
+    componentDidMount(){
+        let token = ""
 
-        axios.get(`http://localhost:8015/api/specialite`, { headers: { "Authorization": `Bearer ${token}` } }).then((spec) => {
+        if (Cookie.get('userAuth')) {
+            let admin = Cookie.getJSON('userAuth');
+            console.log(admin)
+            token = admin.token
+        } else {
+            this.setState({ isAuth: false })
+        }
+        axios.get(`http://localhost:8015/api/get/specialite`, { headers: { "Authorization": `Bearer ${token}` } }).then((spec) => {
             this.setState({ listeSpeciaites: [...spec.data] })
         }).catch((r) => console.error(r))
-    }
-    componentDidMount(){
-        axios.post(`http://localhost:8015/api/authenticate`, {
-            username: "admin",
-            password: "admin"
+            this.setState({ token: token })
 
-        }).then((res) => {
-            this.getListeSpecialite(res.data.token)
-            this.setState({ token: res.data.token })
-
-        })
+    
     }
     editSpecialite = (id) => {
         this.setState({ show: !this.state.show, details: this.state.listeSpeciaites[id] })
@@ -75,9 +73,9 @@ export default class listSpicialite extends Component {
     }
     saveChange =(id, data)=>{
         axios.put(`http://localhost:8015/api/specialite/${id}`, { id: id, label: data }, { headers: { "Authorization": `Bearer ${this.state.token}` } }).then((res) => {
-        console.log(res)   
+        console.log(res.data)   
         this.setState({ show: !this.state.show })
-            this.getListeSpecialite(this.state.token);
+            // this.getListeSpecialite(this.state.token);
         })
     }
 

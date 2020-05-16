@@ -9,12 +9,16 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { FaHourglassHalf } from 'react-icons/fa'
 
 import moment from 'moment'
+import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
 import {
     TimePicker,
+    KeyboardDatePicker,
     MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
+
 import Axios from 'axios';
+import Cookie from 'js-cookie'
 
 const outerTheme = createMuiTheme({
     palette: {
@@ -32,24 +36,32 @@ export default class listJourHeure extends Component {
         this.state = {
             show: false,
             details: { 
-                id:1,
-                debutMatin: "08:00:00", 
-                finMatin: "12:30:00", 
-                debutSoir: "14:30:00", 
-                finSoir: "19:00:00", 
-                dureeConsultation: "15"
+                // id:1,
+                heure_de_debut: "2020-05-14T08:31:04.424Z", 
+                heure_de_fin: "2020-05-14T08:31:04.424Z", 
+                jour_de_debut: "2020-05-14T08:31:04.424Z", 
+                jour_de_fin: "2020-05-14T08:31:04.424Z",
+                medecin_id: 0 
             }
         }
     }
-    getHours = () => {
-        // Axios.get(`http://localhost:8015/disponibilite`).then((dispo) => {
-        //     this.setState({ details: [...dispo.data] })
-        // }).catch((r) => console.error(r))
-    }
 
    componentDidMount(){
-    //    this.getHours()
-   }
+       let token = ""
+
+       if (Cookie.get('userAuth')) {
+           let admin = Cookie.getJSON('userAuth');
+           token = admin.token
+           this.setState({admin : admin})
+           console.log(token)
+       } else {
+           
+       }
+       this.setState({ token: token })
+       Axios.get(`http://localhost:8015/api/disponibilites`, { headers: { "Authorization": `Bearer ${token}` } }).then((dispo) => {
+        //    this.setState({ details: dispo.data[0] })
+       }).catch((r) => console.error(r))
+    }
 
     annulerModification=()=>{
         this.setState({ show: false})
@@ -60,27 +72,34 @@ export default class listJourHeure extends Component {
     }
 
     sendData = (id, data)=>{
-        // // Axios.put(`http://localhost:8015/disponibilite/${id}`, { id: id, label: data }).then((res) => {
-        // //     this.setState({ details: data, show: false })
-        // // })
-        // console.log(id, data)
+        console.log(this.state.token)
+        Axios.post(`http://localhost:8015/api/disponibilites`, { headers: { "Authorization": `Bearer ${this.state.token}` } },  { ...data, id: this.state.admin.id }).then((res) => {
+            this.setState({ details: data, show: false })
+        })
+        console.log(id, data)
     }
 
     render() {
        
         return (
+            
             <ThemeProvider theme={outerTheme}>
                 <div >
+                    <Typography variant="h1" noWrap className='text-center' style={{ color: '#6ab2d8', marginTop: '-6rem', fontSize: '30' }}>
+                        Heurs Travail
+          </Typography>
                     <Heure setShow={this.setShow} details={this.state.details} />
                     <EditModal show={this.state.show} handleClose={this.annulerModification} details={this.state.details} sendData={this.sendData} />
                 </div>
             </ThemeProvider>
+            
         )
 
     }
 }
 function Heure(props){
     return(
+        
         <Col lg="6">
         <div className="working-time item">
                 <FaHourglassHalf color="white" size="1.5rem" />
@@ -102,24 +121,25 @@ function Heure(props){
 
 function EditModal(props) {
 
-    const [debutMatin, setDebutMatin] = useState(new Date("January 01 1970 "+ props.details.debutMatin));
-    const [finMatin, setFinMatin] = useState(new Date("January 01 1970 " + props.details.finMatin));
+    const [heure_de_debut, setDebutMatin] = useState(new Date("January 01 1970 "+ props.details.debutMatin));
+    const [heure_de_fin, setFinMatin] = useState(new Date("January 01 1970 " + props.details.finMatin));
 
-    const [debutSoir, setDebutSoir] = useState(new Date("January 01 1970 " + props.details.debutSoir));
-    const [finSoir, setFinSoir] = useState(new Date("January 01 1970 " + props.details.finSoir));
+    const [jour_de_debut, setDebutSoir] = useState(new Date("January 01 1970 " + props.details.debutSoir));
+    const [jour_de_fin, setFinSoir] = useState(new Date("January 01 1970 " + props.details.finSoir));
 
 
     const [dureeConsultation, setDureeConsultation] = useState(15);
 
     const saveDonne = (e) =>{
         e.preventDefault();
-        props.sendData(props.details.id, { id: props.details.id, debutMatin: moment(debutMatin).format('HH:mm:ss'), finMatin: moment(finMatin).format('HH:mm:ss'), debutSoir: moment(debutSoir).format('HH:mm:ss'), finSoir: moment(finSoir).format('HH:mm:ss'), dureeConsultation: dureeConsultation })
+        props.sendData(props.details.id, { heure_de_debut: moment(heure_de_debut).format('HH:mm:ss'), heure_de_fin: moment(heure_de_fin).format('HH:mm:ss'), jour_de_fin: moment(jour_de_fin).format('HH:mm:ss'), jour_de_debut: moment(jour_de_debut).format('HH:mm:ss') })
 
     }
   
  
 
     return (
+        
         <Modal className="modal-margin" show={props.show} onHide={props.handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>modification des heurs de travails</Modal.Title>
@@ -132,17 +152,17 @@ function EditModal(props) {
                         <label>les heure du marche matin</label>
                         <Row className="justify-content-around">
                         <TimePicker
-                                    value={debutMatin}
+                                    value={heure_de_debut}
                         label="heure de début"
                         ampm={false}
-                                    onChange={setDebutMatin}
+                        onChange={setDebutMatin}
                         autoOk
                          />
                     <TimePicker
-                                    value={finMatin}
+                        value={heure_de_fin}
                         label="heure de fin"
                         ampm={false}
-                                    onChange={setFinMatin}
+                        onChange={setFinMatin}
                         autoOk
                     />
                         </Row>
@@ -151,35 +171,50 @@ function EditModal(props) {
                         <label>les heure du marche de l'aprés midi</label>
 
                     <Row className="justify-content-around mt-5">
-                        <TimePicker
-                                    value={debutSoir}
+                        {/* <TimePicker
+                            value={jour_de_debut}
                             label="heure de début"
                             ampm={false}
-                                    onChange={setDebutSoir}
+                            onChange={setDebutSoir}
                             autoOk
                         />
                         <TimePicker
-                                    value={finSoir}
+                                    value={jour_de_fin}
                             label="heure de fin"
                             ampm={false}
                                     onChange={setFinSoir}
                             autoOk
-                        />
+                        /> */}
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date picker inline"
+                                    value={jour_de_debut}
+                                    onChange={setDebutSoir}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date picker inline"
+                                    value={jour_de_fin}
+                                    onChange={setFinSoir}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
                     </Row>
                     </Col>
                     </MuiPickersUtilsProvider>
-                <Row className="mt-5 justify-content-center">
-                    <InputNumber
-                        aria-label="Number input example that demonstrates using decimal values"
-                        min={2}
-                        max={60}
-                        step={2}
-                        value={dureeConsultation}
-                        style={{ width: 100 }}
-                        onChange={setDureeConsultation}
-                        formatter={value => `${value} min`}
-                    />
-                    </Row>
+              
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="primary" type="submit">

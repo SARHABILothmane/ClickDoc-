@@ -32,18 +32,18 @@ export default class ajouterRdv extends Component {
 
     }
     componentDidMount() {
-        // Axios.get(`http://localhost:8015/patient`).then((pat) => {
-        //     this.setState({ patient: [...pat.data] })
-        // }).catch((r) => console.error(r))
+        Axios.get(`http://localhost:8015/api/patients`).then((pat) => {
+            this.setState({ patient: [...pat.data] })
+        }).catch((r) => console.error(r))
 
-          // Axios.get(`http://localhost:8015/disponibilite/${this.props.medecinId}`).then((dis) => {
-        //     this.setState({ disponibilite: [...dis.data] })
-        // }).catch((r) => console.error(r))
+        Axios.get(`http://localhost:8015/api/medcin/disponibilites/${this.props.medcin_id}`).then((dis) => {
+            this.setState({ disponibilite: [...dis.data] })
+        }).catch((r) => console.error(r))
 
 
-        //  Axios.get(`http://localhost:8015/medecin/reservation/${props.medecinId}/${this.state.selectedDate}`).then((reservation) => {
-        // this.setState({ reservation: [...reservation.data] })
-        //  }).catch((r) => console.error(r))
+        Axios.get(`http://localhost:8015/api/medcin/reservation/${this.props.medcin_id}/${this.state.selectedDate}`).then((reservation) => {
+        this.setState({ reservation: [...reservation.data] })
+         }).catch((r) => console.error(r))
 
     }
     changeDate = (e) => {

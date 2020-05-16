@@ -39,7 +39,7 @@ export default class listPatient extends Component {
     componentDidMount() {
         axios.post(`http://localhost:8015/api/authenticate`, {
             username: "admin",
-            password: "admin"
+            password: "admin",
 
         }).then((res) => {
             this.setState({token: res.data.token})

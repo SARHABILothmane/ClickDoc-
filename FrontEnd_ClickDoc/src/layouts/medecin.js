@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Route, Switch, Redirect } from "react-router-dom";
+import Cookie from 'js-cookie'
 
 import Patient from '../views/medecin/patient';
 import Calandrier from '../views/medecin/calandrier';
@@ -17,16 +18,30 @@ export default class medecin extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            medecinInfo: this.props.userData
+            medecinInfo: null,
+            isAuth: true
         }
-
+        
+    }
+    componentDidMount(){
+        if (Cookie.get('userAuth') ){
+            let medecin = Cookie.getJSON('userAuth')
+            this.setState({ medecinInfo: medecin, isAuth: true} )
+         }else{
+             this.setState({isAuth: false})
+         }
     }
   
     render() {
-        if (this.state.medecinInfo.id == undefined || this.state.medecinInfo == 0) {
-            return <Redirect to="/public/authentification-medecin" />
+
+        if(!this.state.isAuth){
+            return <Redirect to="/public" />
+        }
+        if (this.state.medecinInfo == null) {
+            return null
         }
         return (
+
             <div>
                 <MiniDrawer routes={routes} /> 
                 

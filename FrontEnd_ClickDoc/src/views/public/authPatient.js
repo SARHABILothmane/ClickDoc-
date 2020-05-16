@@ -80,7 +80,7 @@ export default function SignIn(props) {
         Axios.post(`http://localhost:8015/api/authenticate`, data).then((res) => {
             Axios.get(`http://localhost:8015/api/users?username=${username}`, { headers: { "Authorization": `Bearer ${res.data.token}` } }).then((use) => {
                 use.data.token = res.data.token
-            setDonee(use.data) 
+                setDonee(use.data) 
                 setCompteCreated(true)
             
             }).catch((r) => console.error(r))
@@ -112,10 +112,10 @@ export default function SignIn(props) {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id="username"
+                        label="Nom d'utilisateur"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
                         onChange={handleChangeMail}
                         value={username}

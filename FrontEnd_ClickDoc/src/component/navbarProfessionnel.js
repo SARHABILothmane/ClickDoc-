@@ -28,14 +28,8 @@ export default function NavbarPublic(props) {
                 <Toolbar className="d-flex justify-content-lg-between">
                     <div class="menu-sidebar">
                         <div id="nav_menu-2" class="sidebar-widget  widget_nav_menu">
-                            <h3 class="sidebar-header">Vous êtes patient ?</h3>
                             <div class="menu-menu-partie-gauche-container">
-                                <ul id="menu-menu-partie-gauche" class="menu">
-                                    
-                                    <li id="menu-item-15686" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-15686">
-                                        <Link to="/public" >Vous êtes patient ?</Link>
-                                    </li>
-                                </ul>
+                                        <Navbar.Brand href="/public">Vous êtes patient ?</Navbar.Brand>
                             </div>
                         </div>
                     </div>
@@ -51,18 +45,9 @@ export default function NavbarPublic(props) {
                         <Navbar.Collapse id="basic-navbar-nav">
 
                             <Nav className="mr-auto">
-                                <ul className="list-unstyled d-flex navtop">
-                                    <li>
-                                        <Link to="/public/professionnel-sante" >Accueil</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/public/authentification-medecin">Login</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/public/inscription-medecin">signup</Link>
-                                    </li>
-                                </ul>
-                               
+                                    <Nav.Link href="/public/professionnel-sante">Accueil</Nav.Link>
+                                    <Nav.Link href="/public/authentification-medecin">Login</Nav.Link>
+                                <Nav.Link href="/public/inscription-medecin">Inscription</Nav.Link>
                             </Nav>
 
                         </Navbar.Collapse>

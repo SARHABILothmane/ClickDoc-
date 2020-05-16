@@ -25,18 +25,14 @@ export default function NavbarPublic(props) {
         <div className={classes.root}>
             <AppBar position="static" style={{ background: '#6ab2d8' }}>
                 <Toolbar className="d-flex justify-content-lg-between">
-                    <div className="menu-sidebar">
-                        <div id="nav_menu-2" className="sidebar-widget  widget_nav_menu">
-                            <h3 className="sidebar-header">Vous êtes médecin ?</h3>
-                            <div className="menu-menu-partie-gauche-container">
-                                <ul id="menu-menu-partie-gauche" className="menu  list-unstyled d-flex navtop">
-                                    <li id="menu-item-15686" className="menu-item menu-item-type-custom menu-item-object-custom menu-item-15686 ml-5">
-                                        <Link to="/public/professionnel-sante" >Vous êtes médecin ?</Link>
-                                    </li>
-                                </ul>
+                    <div class="menu-sidebar">
+                        <div id="nav_menu-2" class="sidebar-widget  widget_nav_menu">
+                            <div class="menu-menu-partie-gauche-container">
+                                <Navbar.Brand href="/public/professionnel-sante">Vous êtes médecin ?</Navbar.Brand>
                             </div>
                         </div>
                     </div>
+                     
                        <img src={logo}
                         width="40"
                         height="40"
@@ -47,21 +43,11 @@ export default function NavbarPublic(props) {
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
                         <Navbar.Collapse id="basic-navbar-nav">
-                            
-                            <Nav className="mr-auto ">
-                                <ul className="list-unstyled d-flex navtop">
-                                    <li>
-                                        <Link to="/public" >Accueil</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/public/authentification-patient">Login</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/public/inscription-patient">signup</Link>
-                                    </li>
-                                </ul>
-                              
-                            </Nav>
+                                <Nav className="mr-auto">
+                                    <Nav.Link href="/public">Accueil</Nav.Link>
+                                    <Nav.Link href="/public/authentification-patient">Login</Nav.Link>
+                                <Nav.Link href="/public/inscription-patient">Inscription</Nav.Link>
+                                </Nav>
                           
                         </Navbar.Collapse>
                     </Navbar>

@@ -38,6 +38,9 @@ export default class calandrier extends Component {
             <div>
 
                 <Container>
+                    <Typography variant="h1" noWrap className='text-center' style={{ color: '#6ab2d8', marginTop: '-6rem' }}>
+                   Calandrier
+          </Typography>
                     <TableContainer component={Paper}>
                         <Table className="" aria-label="simple table">
                             <TableHead>

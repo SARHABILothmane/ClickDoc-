@@ -15,6 +15,7 @@ import { Modal, Button } from 'react-bootstrap'
 
 import axios from 'axios'
 import { Container, TextField } from '@material-ui/core';
+import Cookie from 'js-cookie'
 
 
 export default class listSpicialite extends Component {
@@ -22,7 +23,7 @@ export default class listSpicialite extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            listeSpeciaites: [],
+            listeItems: [],
             show: false,
             details: [],
 
@@ -30,26 +31,24 @@ export default class listSpicialite extends Component {
 
         }
     }
-    getListeSpecialite = (token) => {
-        axios.get(`http://localhost:8015/api/medcins`, { headers: { "Authorization": `Bearer ${token}` } }).then((spec) => {
-            this.setState({ listeSpeciaites: [...spec.data] })
-            console.log(spec.data)
-        }).catch((r) => console.error(r))
-    }
+
     componentDidMount() {
-        axios.post(`http://localhost:8015/api/authenticate`, {
-            username: "admin",
-            password: "admin"
+        let token = ""
 
-        }).then((res) => {
-            this.getListeSpecialite(res.data.token)
-            this.setState({ tokent: res.data.token})
+        if (Cookie.get('userAuth')) {
+            let admin = Cookie.getJSON('userAuth');
+            token = admin.token
+        } else {
+            this.setState({ isAuth: false })
         }
-            ).catch((r) => console.error(r))
-
+        console.log(token)
+        axios.get(`http://localhost:8015/api/medcins`, { headers: { "Authorization": `Bearer ${token}` } }).then((spec) => {
+            this.setState({ listeItems: [...spec.data] })
+        }).catch((r) => console.error(r))
+            this.setState({ tokent: token})
     }
     deleteMedecin = (id) => {
-        this.setState({ showDelete: !this.state.showDelete, details: this.state.listeSpeciaites[id] })
+        this.setState({ showDelete: !this.state.showDelete, details: this.state.listeItems[id] })
     }
 
     saveChangeDelete = (id) => {
@@ -85,7 +84,7 @@ export default class listSpicialite extends Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.listeSpeciaites.map((specialite, index) => (
+                                {this.state.listeItems.map((specialite, index) => (
                                     <TableRow key={specialite.id}>
                                         <TableCell component="th" scope="row">
                                             {specialite.nom + " " + specialite.prenom}

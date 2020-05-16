@@ -41,27 +41,46 @@ export default class SignUp extends Component {
         super(props)
         this.state = {
             listeSpecialite: [],
-            token: ''
+            token: '',
+            listeVille:[]
         }
     }
     getListeSpecialite = (token) => {
 
-        Axios.get(`http://localhost:8015/api/specialite`, { headers: { "Authorization": `Bearer ${token}` } }).then((spec) => {
+        Axios.get(`http://localhost:8015/api/get/specialite`, { headers: { "Authorization": `Bearer ${token}` }}).then((spec) => {
+
             this.setState({ listeSpecialite: [...spec.data] })
-            console.log(spec.data)
+        }).catch((r) => console.error(r))
+    }
+    getListevilles = (token) => {
+
+        Axios.get(`http://localhost:8015/api/villes`, { headers: { "Authorization": `Bearer ${token}` } }).then((spec) => {
+            this.setState({ listeVille: [...spec.data] })
         }).catch((r) => console.error(r))
     }
     componentDidMount(){
-        Axios.post(`http://localhost:8015/api/authenticate`, {
-            username: "admin",
-            password: "admin"
+        // ************************************************************************ mniin ithayad JWT 3la ville ou specilite ndécomenter hado ***********
+        // Axios.get(`http://localhost:8015/api/get/specialite`).then((spec) => {
+           
+        //     this.setState({ listeSpecialite: [...spec.data] })
+        //     console.log(spec.data)
+        // }).catch((r) => console.error(r))
+        // Axios.get(`http://localhost:8015/api/villes`).then((spec) => {
+        //     this.setState({ listeVille: [...spec.data] })
+        // }).catch((r) => console.error(r))
+
+        Axios.post(`http://localhost:8015/api/authenticate`, {    
+        username: "admin",
+        password: "admin",
+            
         }).then((res) => {
             this.setState({ token: res.data.token})
             this.getListeSpecialite(res.data.token)
-            // this.savePatient()
+            this.getListevilles(res.data.token)
 
         })
     }
+    
     savePatient = (e) => {
         e.preventDefault()
         let state = this.state
@@ -73,25 +92,28 @@ export default class SignUp extends Component {
                     "createdAt": "2020-01-30T08:50:31.808Z",
                     "description": state.description,
                     "duree_de_consultation": "2020-01-30T08:50:31.808Z",
-                    "email": state.description,
+                    "email": state.email,
                     "nom": state.firstName,
                     "numero_de_telephone":state.numero_telephone,
                     "numero_inp": state.numero_telephone_cabinet,
                     "password": state.password,
                     "prenom": state.lastName,
                     "role": {
-                        "id": 2,
-                        "label": "medecin"
+                        "id": 2
                     },
-                    "specialite": state.specialite,
+                    "specialite": {
+                        "id": state.specialite,
+                        "label": "Dentiste"
+                    },
                     "specialition": "string",
                     "updatedAt": "2020-01-30T08:50:31.808Z",
                     "username": state.firstName,
                     "ville": {
-                        "id": 1,
+                        "id": state.ville,
                         "label": "youssoufia"
                     }
                 }
+                console.log(data)
                 Axios.post(`http://localhost:8015/api/login/medcin`, data).then((use) => {
                     this.setState({ compteCreated: true, userData: use.data })
                 }).catch((r) => this.setState({ compteCreated: false })
@@ -108,9 +130,11 @@ export default class SignUp extends Component {
         this.setState({ [e.target.name]: e.target.value })
     }
     handleChangeSpecialite = (e) => {
-        this.setState({ [e.target.name]: this.state.listeSpecialite[e.target.value] })
+        this.setState({ [e.target.name]: e.target.value })
     }
-
+    handleChangeVille = (e) => {
+        this.setState({ [e.target.name]: e.target.value })
+    }
     handleChangePhone = (v, n) => {
         this.setState({ numero_telephone: v })
     }
@@ -138,12 +162,12 @@ export default class SignUp extends Component {
                     </Typography>
                     <form className="" onSubmit={this.savePatient}>
                         <Grid className="" container justify="flex-end">
-                            <Grid item>
+                            {/* <Grid item>
                                 vous avez déjà un compte?
                             <Link to="/authentification-medecin" variant="body2">
                                     accéder à votre compte
                             </Link>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                         <Grid container spacing={2}>
                             <Grid className="mt-5" item xs={12} sm={6}>
@@ -272,15 +296,15 @@ export default class SignUp extends Component {
                         <Grid container spacing={2}>
                             <Grid className="mt-5" item xs={12} sm={12}>
                                 <FormControl fullWidth className="">
-                                    <InputLabel id="demo-simple-select-label">la spécialité</InputLabel>
+                                    <InputLabel >la spécialité</InputLabel>
                                     <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
+                                        
+                                        
                                         name="specialite"
-                                        value={this.state.specialiteName}
+                                        value={this.state.specialite}
                                         onChange={this.handleChangeSpecialite}
                                     >
-                                        {this.state.listeSpecialite.map((e, i) => <MenuItem key={i} value={i}>{e.label}</MenuItem>)}
+                                        {this.state.listeSpecialite.map((e, i) => <MenuItem key={e.id} value={e.id}>{e.label}</MenuItem>)}
                                         
                                     </Select>
                                 </FormControl>
@@ -305,26 +329,22 @@ export default class SignUp extends Component {
                                     }}
                                 />
                             </Grid>
-                            <Grid className="mt-5" item xs={12} sm={6}>
-                                <TextField
-                                    value={this.state.ville}
-                                    onChange={this.handleChange}
-                                    autoComplete="fname"
-                                    required
-                                    fullWidth
-                                    id="ville"
-                                    label="ville"
-                                    name="ville"
-                                    autoComplete="ville"
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <FaMailBulk color="#6ab2d8" />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
+                            <Grid className="mt-5" item xs={12} sm={12}>
+                                <FormControl fullWidth className="">
+                                    <InputLabel >la ville</InputLabel>
+                                    <Select
+                                        
+                                        
+                                        name="ville"
+                                        value={this.state.ville}
+                                        onChange={this.handleChangeVille}
+                                    >
+                                        {this.state.listeVille.map((e, i) => <MenuItem key={i} value={e.id}>{e.label}</MenuItem>)}
+
+                                    </Select>
+                                </FormControl>
                             </Grid>
+                            
                             <Grid className="mt-5" item xs={12} sm={6}>
                                 <PhoneNumber
                                     name="numero_telephone_cabinet"

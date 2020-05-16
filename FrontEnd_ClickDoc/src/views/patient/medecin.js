@@ -18,30 +18,31 @@ export default class listMedecinRechercher extends Component {
         super(props)
         this.state = {
             listeSpeciaites: [{ id: 0, label: " " }],
-            listeVille: [{ id: 0, label: "youssoufia" }],
+            listeVille: [{ id: 0, label: " " }],
             token:'',
             listeMedecins: []
         }
     }
     sendingSerchRequest = (d) => {
-        Axios.get(`http://localhost:8015/api/search/medcins?nom=${d.nom}&ville=${d.ville}`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } }).then((spec) => {
+        console.log(d)
+        Axios.get(`/api/search/medcins/${d.nom}&ville=${d.ville}&specialite=${d.specialite}`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } }).then((spec) => {
             this.setState({ listeMedecins:spec.data})
         }).catch((r) => console.error(r))
     }
     componentDidMount() {
-   
-            Axios.get(`http://localhost:8015/api/specialite`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } } ).then((spec) => {
+        console.log(this.props.donneUser)
+        Axios.get(`http://localhost:8015/api/get/specialite`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } } ).then((spec) => {
                 this.setState({ listeSpeciaites: [...spec.data] })
             }).catch((r) => console.error(r))
 
-            Axios.get(`http://localhost:8015/api/villes`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` }} ).then((vil) => {
+        Axios.get(`http://localhost:8015/api/villes`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` }} ).then((vil) => {
+            console.log(vil)
                 this.setState({ listeVille: [...vil.data] })
             }).catch((r) => console.error(r))      
     }
     render() {
         return (
             <div>
-
                 <FormulaireRecherche
                     listeSpeciaites={this.state.listeSpeciaites}
                     listeVille={this.state.listeVille}

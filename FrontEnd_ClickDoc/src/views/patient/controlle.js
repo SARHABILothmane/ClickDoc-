@@ -14,7 +14,7 @@ export default class calandrier extends Component {
     }
 
     componentDidMount() {
-        Axios.get(` http://localhost:8015/api/patients/reservations/${this.props.donneUser.id}`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } }).then((spec) => {
+        Axios.get(` http://localhost:8015/api/patients/reservations/${this.props.patient_id}$`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } }).then((spec) => {
             this.setState({ listeConsultation: [...spec.data] })
         }).catch((r) => console.error(r))
     }

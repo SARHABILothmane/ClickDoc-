@@ -45,7 +45,7 @@ export default class listSpicialite extends Component {
     }
     getListeSpecialite = (token) => {
 
-        axios.get(`http://localhost:8015/specialite`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } }).then((spec) => {
+        axios.get(`http://localhost:8015/api/get/specialite`, { headers: { "Authorization": `Bearer ${this.props.donneUser.token}` } }).then((spec) => {
             this.setState({ listeSpeciaites: [...spec.data] })
         }).catch((r) => console.error(r))
     }
@@ -87,6 +87,9 @@ export default class listSpicialite extends Component {
         return (
             <ThemeProvider theme={outerTheme}>
                 <Container>
+                    <Typography variant="h1" noWrap className='text-center' style={{ color: '#6ab2d8', marginTop: '-6rem' }}>
+                        ajouter Rendez-vous
+          </Typography>
                     <Row className="m-5">
                         <Col>
                             <Fab onClick={this.addSpecialite} className="float-right" style={{ background: '#08bc83' }} aria-label="add">
